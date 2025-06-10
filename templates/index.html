@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NIDS 3D Dashboard</title>
+
+    <!-- Fonts & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 40px;
+            max-width: 950px;
+            width: 100%;
+            transform: perspective(1000px) rotateX(2deg) rotateY(1deg);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: #ffdf6b;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #ffe;
+        }
+
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+        }
+
+        input[type="number"]::placeholder {
+            color: #ccc;
+        }
+
+        .btn-custom {
+            background: linear-gradient(to right, #ff4e50, #f9d423);
+            color: #000;
+            border: none;
+            font-weight: 600;
+            padding: 12px 25px;
+            transition: 0.3s ease;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to right, #f9d423, #ff4e50);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 1px solid #4caf50;
+            color: #afffaf;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .row > div {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="glass-card">
+        <h2>Network Intrusion Detection System</h2>
+        <form action="/predict" method="POST">
+            <div class="row">
+                <!-- 11 Inputs -->
+                <div class="col-md-6">
+                    <label class="form-label">Flow Duration</label>
+                    <input type="number" class="form-control" name="Flow Duration" placeholder="Enter Flow Duration" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Protocol</label>
+                    <input type="number" class="form-control" name="Protocol" placeholder="Enter Protocol" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Total Forward Packets</label>
+                    <input type="number" class="form-control" name="Tot Fwd Pkts" placeholder="Enter Tot Fwd Pkts" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Total Backward Packets</label>
+                    <input type="number" class="form-control" name="Tot Bwd Pkts" placeholder="Enter Tot Bwd Pkts" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Fwd Packet Len Max</label>
+                    <input type="number" class="form-control" name="Fwd Pkt Len Max" placeholder="Enter Fwd Pkt Len Max" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Bwd Packet Len Max</label>
+                    <input type="number" class="form-control" name="Bwd Pkt Len Max" placeholder="Enter Bwd Pkt Len Max" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Flow Bytes/s</label>
+                    <input type="number" class="form-control" name="Flow Byts/s" step="any" placeholder="Enter Flow Bytes/s" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Flow Packets/s</label>
+                    <input type="number" class="form-control" name="Flow Pkts/s" step="any" placeholder="Enter Flow Pkts/s" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Hour</label>
+                    <input type="number" class="form-control" name="Hour" min="0" max="23" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Minute</label>
+                    <input type="number" class="form-control" name="Minute" min="0" max="59" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Second</label>
+                    <input type="number" class="form-control" name="Second" min="0" max="59" required>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-custom">🔍 Predict</button>
+            </div>
+        </form>
+
+        {% if prediction %}
+        <div class="result-box">
+            Prediction Result: {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
