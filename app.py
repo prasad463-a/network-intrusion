@@ -4,46 +4,37 @@ import pickle
 
 app = Flask(__name__)
 
-# Load your model
+# Load the trained model
 model = pickle.load(open("best_nids_model.pkl", "rb"))
 
-# Features expected
+# Define the selected features
 selected_features = [
-    "Flow Duration", "Protocol", "Tot Fwd Pkts", "Tot Bwd Pkts",
-    "Fwd Pkt Len Max", "Bwd Pkt Len Max", "Flow Byts/s", "Flow Pkts/s",
+    "Flow Duration", "Protocol", "Tot Fwd Pkts", "Tot Bwd Pkts", 
+    "Fwd Pkt Len Max", "Bwd Pkt Len Max", "Flow Byts/s", "Flow Pkts/s", 
     "Hour", "Minute", "Second"
 ]
-
-# Labels
-lab = ['Benign', 'FTP-BruteForce', 'SSH-BruteForce']
-
-
+lab=['Benign','FTP-BruteForce','SSH-Bruterorce']
 @app.route("/")
 def home():
-    return render_template("index.html")
-
+    return render_template("index.html")  # Ensure "index.html" is the HTML form
 
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # 1. Get form values
+        # Get form values as a list of floats
         values = [float(request.form[feature]) for feature in selected_features]
 
-        # 2. Convert to NumPy array
+        # Convert to a NumPy array and reshape for model input
         input_array = np.array(values).reshape(1, -1)
 
-        # 3. Make prediction
+        # Make prediction
         prediction = model.predict(input_array)[0]
 
-        # 👉👉 4. DEBUG LINE — SEE WHAT THE MODEL PREDICTS
-        print("Predicted class index:", prediction)
-
-        # 5. Show result on webpage
+        # Return the prediction result
         return render_template("index.html", prediction=lab[prediction])
 
     except Exception as e:
         return f"Error: {str(e)}"
-
 
 if __name__ == "__main__":
     app.run(debug=True)
